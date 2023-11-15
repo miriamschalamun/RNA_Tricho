@@ -37,7 +37,7 @@ today <- Sys.Date()
 today <- format(today, format = "%y%m%d", trim_ws = T)
 
 #load annotation file - Modified from "The Genomes of Three Uneven Siblings: Footprints of the Lifestyles of Three Trichoderma Species"  Schmoll et al. 2016 
-annotation <- read_excel("C:/Users/SchalamunM/OneDrive - AIT/Analysis/Github/Annotation_file.xlsx")
+annotation <- read_excel("/path/to//Annotation_file.xlsx")
 
 ```
 
