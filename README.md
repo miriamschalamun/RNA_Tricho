@@ -22,8 +22,8 @@ To conduct the gene expression analysis using the provided R script, follow the 
 1. Clone this repository to your local machine or download the R script file "RNASeq_analysis.Rmd".
 2. Open RStudio or another R environment.
 3. Set your working directory to the location of the script files. Replace `"/path/to/script"` with the actual path to where you have saved the script:
-
 ```R
 setwd("/path/to/script")
 ```
-Examples of all files required for this script are provided.  
+4. Execute the steps in the R script, explanations are provided within the script.
+5. Examples of all files required for this script are provided.  
