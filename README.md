@@ -19,7 +19,7 @@ install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorB
 
 ## Usage 
 To conduct the gene expression analysis using the provided R script, follow the steps below:
-1. Clone this repository to your local machine or download the R script files.
+1. Clone this repository to your local machine or download the R script file "RNASeq_analysis.Rmd".
 2. Open RStudio or another R environment.
 3. Set your working directory to the location of the script files. Replace `"/path/to/script"` with the actual path to where you have saved the script:
 
