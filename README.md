@@ -14,15 +14,4 @@ install.packages("BiocManager")
 BiocManager::install(c("DESeq2", "apeglm", "genefilter"))
 install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorBrewer", "gplots", "tidyverse", "edgeR", "matrixStats", "xlsx", "dendextend", "topGO", "rrvgo"))
 
-## Usage
-
-To conduct the gene expression analysis using the provided R scripts, follow the steps below:
-
-1. Clone this repository to your local machine or download the R script files.
-
-2. Open RStudio or another R environment.
-
-3. Set your working directory to the location of the script files. Replace `"/path/to/script"` with the actual path to where you have saved the script:
-
-```R
 setwd("/path/to/script")
