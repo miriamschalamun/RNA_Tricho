@@ -13,5 +13,4 @@ Once R is installed, you can run the following commands in your R console to ins
 install.packages("BiocManager")
 BiocManager::install(c("DESeq2", "apeglm", "genefilter"))
 install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorBrewer", "gplots", "tidyverse", "edgeR", "matrixStats", "xlsx", "dendextend", "topGO", "rrvgo"))
-
 setwd("/path/to/script")
