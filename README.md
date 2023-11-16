@@ -62,7 +62,7 @@ install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorB
 
      **7.1 PCA plot**
      A principal component analysis (PCA) plot shows the variation between samples based on their gene expression. Similar samples will cluster together in the plot. The plot has a standard X-Y axis layout, with the axes representing the two principal components that capture the most variation in the data.
-     ![PCA plot](example url)
+     ![PCA plot]([example url](https://github.com/miriamschalamun/RNASeq_analysis/blob/main/output/plots/PCA/example_data_PCA__231115.png)
 
 
 
