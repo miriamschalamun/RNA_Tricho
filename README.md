@@ -64,6 +64,7 @@ I have included some example output files to demonstrate what you can expect fro
  **PCA plot**
 A principal component analysis (PCA) plot shows the variation between samples based on their gene expression. Similar samples will cluster together in the plot. The plot has a standard X-Y axis layout, with the axes representing the two principal components that capture the most variation in the data.
    ![PCA Plot Example](output/plots/PCA/example_data_PCA__231115.png)
+   Here we see that the main  variation of the dataset derives from the different ligth conditions (DD, LL) used (87% variation on x-axis (PC1)). 
 
 
 
