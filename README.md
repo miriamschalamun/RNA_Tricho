@@ -6,7 +6,9 @@ This repository offers an R script for gene expression analysis, tailored for th
 The **RNASeq_analysis** script was created to analyze the findings in Schalamun et al. 2023 "The transcription factor STE12 in *T. reesei* is invovled in carbon and secondary metabolism".
 The input data is a raw count matrix from *featureCounts* but other raw count matrixes from can be used as well. 
 The  scripts include functions for differential gene expression analysis, normalization, principal component analysis (PCA), heatmaps generation, and gene ontology (GO) enrichment analysis. 
+
 *Trichoderma reesei* gene annotation is based on PMCID: PMC4771370 and PMC4812632. 
+
 The script was wrritten and executed on Windows 10 and R version 4.2.2. 
  
 
