@@ -62,7 +62,39 @@ install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorB
 
      **7.1 PCA plot**
      A principal component analysis (PCA) plot shows the variation between samples based on their gene expression. Similar samples will cluster together in the plot. The plot has a standard X-Y axis layout, with the axes representing the two principal components that capture the most variation in the data.
-     ![PCA plot]([example url](https://github.com/miriamschalamun/RNASeq_analysis/blob/main/output/plots/PCA/example_data_PCA__231115.png)
+     ![PCA plot](https://github.com/miriamschalamun/RNASeq_analysis/blob/main/output/plots/PCA/example_data_PCA__231115.png)
+
+
+
+
+
+
+     # RNASeq_analysis
+
+## Description
+This repository offers an R script for gene expression analysis, tailored for the organism *Trichoderma reesei* and based on the Bioconductor DESeq2 package. For details of the DESeq2 package please refer to this vignette: [DESeq2 Vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html).
+
+The **RNASeq_analysis** script was created to analyze the findings in Schalamun et al. 2023 "The transcription factor STE12 in *T. reesei* is involved in carbon and secondary metabolism".
+
+The starting point for this analysis is a raw count matrix from *featureCounts*; however, count matrices from other sources can also be used. The scripts include functions for differential gene expression analysis, normalization, principal component analysis (PCA), heatmaps generation, and gene ontology (GO) enrichment analysis.
+
+*Trichoderma reesei* gene annotation is based on PMCID: PMC4771370 and PMC4812632.
+
+The script was written and executed on Windows 10 and R version 4.2.2.
+
+## Installation
+[Instructions for installing necessary software and packages]
+
+## Usage
+[Step-by-step instructions on how to use the script]
+
+## Example Outputs
+We've included some example output files to demonstrate what you can expect from running the RNASeq_analysis script. These examples are based on the *Trichoderma reesei* data and are a good reference for understanding the kind of results the script will produce.
+
+**7.1 PCA Plot**  
+The PCA plot is a visual representation of how samples relate based on gene expression, with similar ones clustering closer on the plot. You can see the plot using the following link:  
+![PCA Plot Example](output/plots/PCA/example_data_PCA__231115.png)
+
 
 
 
