@@ -631,7 +631,7 @@ BPterms <- ls(GOBPTerm)
 MFterms <- ls(GOMFTerm)
 
 # Load custom annotation file  
-geneID2GO <- readMappings(file = "C:/Users/SchalamunM/OneDrive - AIT/Analysis/Github/GOterms_TFW_ID_goACC.txt")
+geneID2GO <- readMappings(file = "C:/Users/SchalamunM/OneDrive - AIT/Analysis/Github/GOterms.txt")
 
 
 # I needed in a format that I have one gene ID and listed next to it the GO terms
