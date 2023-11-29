@@ -13,9 +13,9 @@ The  scripts include functions for differential gene expression analysis, normal
 The script was wrritten and executed on Windows 10 and R version 4.2.2. 
  
 
-## Installation
+## Requirements and Installation
 
-To run the RNASeq_analysis, you will need R installed on your computer. If you do not have R installed, you can download and install it from [CRAN](https://cran.r-project.org/).
+Download and install R from [CRAN](https://cran.r-project.org/).
 
 Once R is installed, you can run the following commands in your R console to install the required packages:
 
@@ -25,7 +25,7 @@ BiocManager::install(c("DESeq2", "apeglm", "genefilter"))
 install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorBrewer", "gplots", "tidyverse", "edgeR", "matrixStats", "xlsx", "dendextend", "topGO", "rrvgo"))
 ```
 
-## Introduction 
+## Quick start 
 
 1. **Obtain the Script**:
    - Clone this repository to your local machine using the command:
@@ -36,25 +36,19 @@ install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorB
    - Download the script file directly from the GitHub repository.
 
 2. **Prepare the Environment**:
-   - Launch RStudio or your preferred R environment.
-   - Install any required R packages that are not already installed. The script will usually prompt you to install missing packages, or you can find a list of required packages at the beginning of the script.
+   - Launch RStudio
+   - Install any required R packages that are not already installed.
 
-3. **Set the Working Directory**:
-   - Use the `setwd()` function to change your working directory to the location where you have saved the `RNASeq_analysis.Rmd` script. Replace `"/path/to/script"` with the actual file path:
-     ```R
-     setwd("/path/to/script")
-     ```
-4. **Run the Script**:
+3. **Run the Script**:
    - Open the `RNASeq_analysis.Rmd` file in RStudio.
    - Run the script interactively by executing code chunks one by one, following the explanations provided within the script. This can be done by clicking the "Run" button within each chunk in RStudio.
 
-5. **Prepare Input Files**:
+4. **Prepare Input Files**:
    - Sample input files specific to *Trichoderma reesei* are provided with this repository. They serve as templates for the format and structure data files should have.
-   - Ensure the file names in your script correspond to the names of your actual data files. If you rename your data files, update the file paths and names in the script accordingly.
-
 
 ## Usage
-
+**Getting started** 
+Load the libraries used
 ```{r libraries}
 library("DESeq2")
 library(stringr)
@@ -76,7 +70,7 @@ library(dendextend)
 library(topGO)
 library(rrvgo)
 ```
-
+ Set up working directory and date, which is added to the output files
 ```{r set up working directory and date}
 # Set the path to the directory where you want to perform the analysis and have all other required files stored (e.g. count files). Make sure to save the script in the same directory
 
@@ -89,8 +83,8 @@ today <- format(today, format = "%y%m%d", trim_ws = T)
 annotation <- read_excel("path/to/Annotation_file.xlsx")
 
 ```
-
-```{r sets up directories}
+Creates directories for output files
+```{r }
 # Creates the directories that are needed later on - execute
 
 directory <- function(name){
