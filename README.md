@@ -143,6 +143,7 @@ colnames(cts)[-1] <- str_extract(colnames(cts)[-1], '[0-9]+')
 # Add meta file 
 meta <- read_excel("meta_example.xlsx", col_names = TRUE)
 ```
+
 **Compute DESeq object**
 ```R
 
@@ -178,8 +179,10 @@ dds <- DESeq(dds, minReplicatesForReplace=Inf)
 dds2 <- dds
 
 ````
+
 **Subset by condition**
 The data set I mostly used consists of different mutants under two conditions. Most of the time the condition (light) is the strongest factor of variance therefore I need to split my data set when computing the dds element for the contrasts later on. A good indicator for that is the PCA plot, it is recommended that if PCA1 (X-axis) has a higher value than 60% and this arises from a condition and not the strains you want to analyse then it is advisable to split the data set like done here. 
+
 ```R
 generate_DESeq_object <- function (condition) {
   # Use grep to find columns that contain the condition (e.g., "DD" or "LL")
@@ -212,7 +215,8 @@ generate_DESeq_object <- function (condition) {
 dds_DD <- generate_DESeq_object("DD")
 dds_LL <- generate_DESeq_object("LL")
 
-```
+````
+
 ** VST count normalization**
 ```R
 In order to  compare counts and visualize them, they need to be normalized first. DESeq2 has its own normalization algorithms, variance stabilizing transformations (VST)  and regularized logarithm (rlog). In this example I use VST normalization. 
