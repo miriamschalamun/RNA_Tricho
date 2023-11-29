@@ -127,7 +127,8 @@ directory("normalized")
 
 ```
 
-**Input files** 
+## Input files
+
 ```{r count and meta file and compute DEseq2 object}
 # Here change the file names to your files and the ds_name to the dataset you are working with 
 
@@ -144,7 +145,7 @@ colnames(cts)[-1] <- str_extract(colnames(cts)[-1], '[0-9]+')
 meta <- read_excel("meta_example.xlsx", col_names = TRUE)
 ```
 
-**Compute DESeq object**
+## Compute DESeq object
 ```R
 
 meta$strain <- factor(meta$strain)
@@ -180,7 +181,7 @@ dds2 <- dds
 
 ````
 
-**Subset by condition**
+## Subset by condition
 
 The data set I mostly used consists of different mutants under two conditions. Most of the time the condition (light) is the strongest factor of variance therefore I need to split my data set when computing the dds element for the contrasts later on. A good indicator for that is the PCA plot, it is recommended that if PCA1 (X-axis) has a higher value than 60% and this arises from a condition and not the strains you want to analyse then it is advisable to split the data set like done here. 
 
@@ -218,7 +219,7 @@ dds_LL <- generate_DESeq_object("LL")
 
 ````
 
-**VST count normalization**
+## VST count normalization
 
 ```R
 In order to  compare counts and visualize them, they need to be normalized first. DESeq2 has its own normalization algorithms, variance stabilizing transformations (VST)  and regularized logarithm (rlog). In this example I use VST normalization. 
@@ -272,7 +273,7 @@ avvsd_DD <- results_DD$avvsd
 avvsd_LL <- results_LL$avvsd
 
 ```
-**FPKM count normalization**
+## FPKM count normalization
 Fragments Per Kilobase of transcript per Million mapped reads (FPKM) 
 These can also be used for visualizations like PCA and heatmaps
 
@@ -284,7 +285,7 @@ write.csv2(fpkm, paste0("normalized/fpkm", "_",ds_name, "_", today, "_", ".csv")
 
 ```
 
- **PCA plot**
+ ## PCA plot
 A principal component analysis (PCA) plot shows the variation between samples based on their gene expression. Similar samples will cluster together in the plot. The plot has a standard X-Y axis layout, with the axes representing the two principal components that capture the most variation in the data.
 
  ```{r}
@@ -314,7 +315,7 @@ Here we see that the main variation of the dataset derives from the different li
 
    The separation of dataset based on the condition is covered in the section above "Subset by condition". 
 
-**Heatmap plot**
+## Heatmap plot
 Heatmaps are created using pheatmap and can be used to visualize clustering of samples and genes 
 ```{r Heatmap plot}
 heatmap_plot <- function(data, name, postfix, rownumbers){
@@ -411,7 +412,7 @@ heatmap_plot_TOPIC(data = avvsd_LL, name = ds_name, rownumbers, postfix = "LL", 
 Additionally we can focus on certain gene sets as defined in the Anntoation file (T. reesei specific) e.g. only CAZymes or transcription factors. 
 ![Heatmap Plot Example](output/plots/heatmaps/example_data_heatmap_80__Transcription factors_231115.png)
 
-**Differentially expressed genes** 
+## Differentially expressed genes
 DEGs are created using the contrast function which results in two types of file, one in the directory conrasts/all which contains the values for all genes and in the directory contrasts/significant the files are already filtered for p-value and fold change. These values can be changed in the function, normally I used padj < 0.05 and log2 fold change of > |1| (corresonds to a fold change > 2) 
 ```{r Contrasts}
 # In the contrasts directory "all" contrasts contain all genes, "sig" contrasts contain filtered for padj and log2fold change - you can change these values (e.g log2Fold Change 0.58 corresponds to a fold change of 1.5)
@@ -463,7 +464,7 @@ contrasts_function(dds, mutant, WT, "LL", "DD", 0.05, 1, today)
 
 ```
 
-**Annotation**
+## Annotation
 Gene annotation is performed using the annotation file, this is specific to T. reesei but any other file in the same format can be used. 
 
 ```R
@@ -499,7 +500,7 @@ annotation_function <- function(data, name){
 }
 ```
 
-**GO enrichment set up**
+## GO enrichment set up
 
 ```R
 # creates the directories and functions for GO enrichment and visualization, here you don't need to change anything. Just execute.
@@ -640,8 +641,8 @@ rrvgo::scatterPlot(simMatrix, reducedTerms, size = "score")
 dev.off()
 }
 ```
-
-```{r topGo GO enrichment}
+## GO enrichment
+```R
 # Performs GO enrichment using topGO 
 
 BPterms <- ls(GOBPTerm)
@@ -684,7 +685,7 @@ Gofunction(data = data, name = name, rrvgo=rrvgo, ontology = category)
 
 ```
 
-**GO visualization**
+## GO visualization
 ```R
 # Visualize using rrvgo and the yeast database for the names
 # yeast db: 
