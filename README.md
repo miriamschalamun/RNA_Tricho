@@ -25,7 +25,7 @@ BiocManager::install(c("DESeq2", "apeglm", "genefilter"))
 install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorBrewer", "gplots", "tidyverse", "edgeR", "matrixStats", "xlsx", "dendextend", "topGO", "rrvgo"))
 ```
 
-## Usage 
+## Introduction 
 
 1. **Obtain the Script**:
    - Clone this repository to your local machine using the command:
@@ -44,20 +44,77 @@ install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorB
      ```R
      setwd("/path/to/script")
      ```
-
 4. **Run the Script**:
    - Open the `RNASeq_analysis.Rmd` file in RStudio.
    - Run the script interactively by executing code chunks one by one, following the explanations provided within the script. This can be done by clicking the "Run" button within each chunk in RStudio.
 
 5. **Prepare Input Files**:
-   - Sample input files specific to *Trichoderma reesei* are provided with this repository. They serve as templates for the format and structure your own data files should have.
-   - If you are working with a different organism, you need to create your own input files matching the templates' style and format.
+   - Sample input files specific to *Trichoderma reesei* are provided with this repository. They serve as templates for the format and structure data files should have.
    - Ensure the file names in your script correspond to the names of your actual data files. If you rename your data files, update the file paths and names in the script accordingly.
 
-6. **Review Outputs**:
-   - After running the script, check the outputs, which may include processed data files, figures, and logs. Review them to ensure the analysis ran as expected.
 
-## Example Outputs
+## Usage
+
+```{r libraries}
+library("DESeq2")
+library(stringr)
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(ggrepel)
+library(apeglm)
+library("pheatmap")
+library("RColorBrewer")
+library("genefilter")
+library(gplots)
+library(tidyverse) 
+library(edgeR) 
+library(matrixStats)
+library("matchmaker")
+library("xlsx")
+library(dendextend)
+library(topGO)
+library(rrvgo)
+```
+
+```{r set up working directory and date}
+# Set the path to the directory where you want to perform the analysis and have all other required files stored (e.g. count files). Make sure to save the script in the same directory
+
+setwd("/path/to/script")
+
+today <- Sys.Date()
+today <- format(today, format = "%y%m%d", trim_ws = T)
+
+#load annotation file - Modified from "The Genomes of Three Uneven Siblings: Footprints of the Lifestyles of Three Trichoderma Species"  Schmoll et al. 2016 
+annotation <- read_excel("path/to/Annotation_file.xlsx")
+
+```
+
+```{r sets up directories}
+# Creates the directories that are needed later on - execute
+
+directory <- function(name){
+  if (file.exists(name)) {
+    cat("the folder already exists")
+  }    else {
+    dir.create(name)
+  }
+}
+
+directory("contrasts")
+directory("contrasts/all")
+directory("contrasts/significant")
+directory("contrasts/strong_filtering")
+directory("plots")
+directory("plots/PCA")
+directory("plots/clust")
+directory("plots/MA")
+directory("plots/heatmaps")
+directory("annotation")
+directory("normalized")
+
+```
+
 I have included some example output files to demonstrate what you can expect from running the RNASeq_analysis script. These examples are based on the *Trichoderma reesei* data and are a good reference for understanding the kind of results the script will produce.
 
 **Count normalization** 
