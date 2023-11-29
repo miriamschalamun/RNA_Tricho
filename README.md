@@ -32,19 +32,6 @@ The  scripts include functions for differential gene expression analysis, normal
 
 The script was wrritten and executed on Windows 10 and R version 4.2.2. 
 
- 
-## Requirements and Installation
-
-Download and install R from [CRAN](https://cran.r-project.org/).
-
-Once R is installed, you can run the following commands in your R console to install the required packages:
-
-```R
-install.packages("BiocManager")
-BiocManager::install(c("DESeq2", "apeglm", "genefilter"))
-install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorBrewer", "gplots", "tidyverse", "edgeR", "matrixStats", "xlsx", "dendextend", "topGO", "rrvgo"))
-```
-
 ## Quick start 
 
  **Obtain the Script**:
@@ -62,8 +49,21 @@ install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorB
  **Prepare Input Files**:
    - Sample input files specific to *Trichoderma reesei* are provided with this repository. They serve as templates for the format and structure data files should have.
 
-## Usage
-**Set-up** 
+ 
+## Requirements and Installation
+
+Download and install R from [CRAN](https://cran.r-project.org/).
+
+Once R is installed, you can run the following commands in your R console to install the required packages:
+
+```R
+install.packages("BiocManager")
+BiocManager::install(c("DESeq2", "apeglm", "genefilter"))
+install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorBrewer", "gplots", "tidyverse", "edgeR", "matrixStats", "xlsx", "dendextend", "topGO", "rrvgo"))
+```
+
+
+## Set-up 
 
 Load the libraries 
 ```{r libraries}
