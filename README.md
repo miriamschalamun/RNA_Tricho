@@ -747,21 +747,6 @@ rrvgo_function_MF_weighted(data, name, pvalue, threshold)
 
 ```
 
-contrast_files <- dir(path = "contrasts/significant/", pattern = ".csv", full.names = T, recursive = F)
-for(i in contrast_files){
-  data <- read.csv2(i)
-  anno_name <- tools::file_path_sans_ext(base::basename(i))
-  name <- paste0("annotation/", anno_name, "_anno", ".xlsx")
-  
-  if (file.exists(name)) {
-      cat("the file already exists")
-  }else
-    annotation_function(data = data, name = name)
-}
-
-```
-
-
 
 
 
