@@ -1,21 +1,25 @@
 # RNASeq_analysis
 
 ## Table of Contents
-[Introduction](#introduction)
-[Requirements and Installation](#requirements-and-installation)
-[Quick Start](#quick-start)
-[Set-up](#set-up)
-[Input files](#input-files)
-[Compute DESeq object](#compute-DESeq-object)
-[Subset by condition](#subset-by-condition)
-[VST count normalization](#vst-count-normalization)
-[FPKM count normalization](#fpkm-count-normlization)
-[PCA plot](#pca-plot)
-[Heatmap plot](#heatmap-plot)
+-[Introduction](#introduction)
+-[Requirements and Installation](#requirements-and-installation)
+-[Quick Start](#quick-start)
+-[Set-up](#set-up)
+-[Input files](#input-files)
+-[Compute DESeq object](#compute-DESeq-object)
+-[Subset by condition](#subset-by-condition)
+-[VST count normalization](#vst-count-normalization)
+-[FPKM count normalization](#fpkm-count-normlization)
+-[PCA plot](#pca-plot)
+-[Heatmap plot](#heatmap-plot)
+-[Heatmap filtered for topic](#heatmap-filtered-for-topic)
+-[Differentially expressed genes](#differentially-expressed-genes)
+-[Annotation](#annotation)
+-[GO enrichment set up](#go-enrichment-set-up)
+-[GO enrichment](#go-enrichment)
+-[GO visualization](#go-visualization)
 
 
-
- 
 ## Introduction
 This repository offers an R script for gene expression analysis, tailored for the organism *Trichoderma reesei* and based on the Bioconductor DESeq2 package. For details of the DESeq2 package please refere to the [DESeq2 Vignette]: https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html.
 
@@ -342,7 +346,7 @@ heatmap_plot(data = avvsd_LL, name = ds_name, rownumbers = 100, postfix = "LL")
 
 ```
 
-```{r Heatmap filtered}
+```{r Heatmap filtered for topic}
 ################ This is  specific to the T. reesei Annotation file######
 # if you want to look at a specific topic: 
 #example topics: Secondary metabolism, CAZymes, Transcription factors, Transporters..the spelling has to be exactly like in the annotation working file
@@ -674,7 +678,7 @@ Gofunction(data = data, name = name, rrvgo=rrvgo, ontology = category)
 
 ```
 
-**Visualizing GO enrichment**
+**GO visualization**
 ```R
 # Visualize using rrvgo and the yeast database for the names
 # yeast db: 
@@ -751,15 +755,6 @@ for(i in contrast_files){
 
 ```
 
-
-
-
-
-
-
-
-
-  
 
 
 
