@@ -4,6 +4,17 @@
 [Introduction](#introduction)
 [Requirements and Installation](#requirements-and-installation)
 [Quick Start](#quick-start)
+[Set-up](#set-up)
+[Input files](#input-files)
+[Compute DESeq object](#compute-DESeq-object)
+[Subset by condition](#subset-by-condition)
+[VST count normalization](#vst-count-normalization)
+[FPKM count normalization](#fpkm-count-normlization)
+[PCA plot](#pca-plot)
+[Heatmap plot](#heatmap-plot)
+
+
+
  
 ## Introduction
 This repository offers an R script for gene expression analysis, tailored for the organism *Trichoderma reesei* and based on the Bioconductor DESeq2 package. For details of the DESeq2 package please refere to the [DESeq2 Vignette]: https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html.
@@ -16,8 +27,8 @@ The  scripts include functions for differential gene expression analysis, normal
 *Trichoderma reesei* gene annotation is based on PMCID: PMC4771370 and PMC4812632. 
 
 The script was wrritten and executed on Windows 10 and R version 4.2.2. 
- 
 
+ 
 ## Requirements and Installation
 
 Download and install R from [CRAN](https://cran.r-project.org/).
@@ -48,7 +59,7 @@ install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorB
    - Sample input files specific to *Trichoderma reesei* are provided with this repository. They serve as templates for the format and structure data files should have.
 
 ## Usage
-**Getting started** 
+**Set-up** 
 
 Load the libraries 
 ```{r libraries}
@@ -198,10 +209,9 @@ dds_DD <- generate_DESeq_object("DD")
 dds_LL <- generate_DESeq_object("LL")
 
 ```
-
+** VST count normalization**
 ```R
-**Count normalizations**
-In order to be able to compare counts and visualize them, they need to be normalized first. DESeq2 has its own normalization algorithms, variance stabilizing transformations (VST)  and regularized logarithm (rlog). In this example I use VST normalization. 
+In order to  compare counts and visualize them, they need to be normalized first. DESeq2 has its own normalization algorithms, variance stabilizing transformations (VST)  and regularized logarithm (rlog). In this example I use VST normalization. 
 
 ```{r VST count normalization}
 # Function to perform VST (Variance Stabilizing Transformation) and calculate averages
@@ -252,40 +262,22 @@ avvsd_DD <- results_DD$avvsd
 avvsd_LL <- results_LL$avvsd
 
 ```
+**FPKM count normalization**
+Fragments Per Kilobase of transcript per Million mapped reads (FPKM) 
+These can also be used for visualizations like PCA and heatmaps
 
-```{r CPM count normalization}
-# These can also be used for count visualizations like PCA and heatmaps
-# CPM using voom 
-voom.design <- model.matrix(~0 + meta$strain)
-colnames(voom.design) <- levels(meta$strain)
-eset <- voom(cts[-1], voom.design)
-colnames(eset) <- meta$replicate
-
-which(!is.finite(eset$E))  
-head(eset$E)   # log2-counts per million (logCPM)log2(0.5)
-
-write.csv2(as.data.frame(geneID = rownames(eset$E), eset$E), paste("normalized/logCPM_", ds_name, today, ".csv"),row.names = T)
-
-##linear model fitting (ANOVA)
-fitFPKM <- lmFit(eset, voom.design)  
-
-write.csv2(as.data.frame(geneID = rownames(fitFPKM$coefficients), fitFPKM$coefficients), paste("normalized/logCPM_avg_", ds_name, today, ".csv"), row.names = T)
-
-```
-
-```{r FPKM count normalization}
-# These can also be used for visualizations like PCA and heatmaps
-# calculates FPKM (Fragments Per Kilobase of transcript per Million mapped reads) values using DESeq2
+```{r}
 fpkm <- fpkm(dds, robust = T)
 head(fpkm)
 colnames(fpkm) <- paste(vsd$replicate)
 write.csv2(fpkm, paste0("normalized/fpkm", "_",ds_name, "_", today, "_", ".csv"))
 
 ```
+
  **PCA plot**
 A principal component analysis (PCA) plot shows the variation between samples based on their gene expression. Similar samples will cluster together in the plot. The plot has a standard X-Y axis layout, with the axes representing the two principal components that capture the most variation in the data.
 
- ```{r PCA plot}
+ ```{r}
 # execute the function that automatically creates PCA plots, here you can change e.g. the size of the plot. 
 # Look at the plots (in publication ready resolution) in the plots/PCA directory
 PCA_plot <- function(data, name, postfix){
@@ -312,7 +304,7 @@ Here we see that the main variation of the dataset derives from the different li
 
    The separation of dataset based on the condition is covered in the section above "Subset by condition". 
 
-**Heatmaps**
+**Heatmap plot**
 Heatmaps are created using pheatmap and can be used to visualize clustering of samples and genes 
 ```{r Heatmap plot}
 heatmap_plot <- function(data, name, postfix, rownumbers){
