@@ -160,6 +160,7 @@ dds2 <- dds
 
 ````
 
+
 I have included some example output files to demonstrate what you can expect from running the RNASeq_analysis script. These examples are based on the *Trichoderma reesei* data and are a good reference for understanding the kind of results the script will produce.
 
 **Count normalization** 
