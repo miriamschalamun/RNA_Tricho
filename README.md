@@ -312,8 +312,7 @@ PCA_plot(data = vsd_LL, name = ds_name, postfix = "LL")
 ```
    ![PCA Plot Example](output/plots/PCA/example_data_PCA__231115.png)
 Here we see that the main variation of the dataset derives from the different ligth conditions (DD, LL) used (87% variation on x-axis (PC1)). Therefore I split the dataset (DESeq object) for the differential gene expression analysis (contrasts) in LL and DD so that the condition does not interfere too much with the effect of mutant vs WT. Here an example PCA for a separated dataset (LL only) and we see that now actually the mutant vs WT are the main variation of the dataset ![PCA Plot Example](output/plots/PCA/example_data_PCA_LL_231115.png)
-
-   The separation of dataset based on the condition is covered in the section above "Subset by condition". 
+The separation of dataset based on the condition is covered in the section above "Subset by condition". 
 
 ## Heatmap plot
 Heatmaps are created using pheatmap and can be used to visualize clustering of samples and genes 
@@ -352,8 +351,8 @@ heatmap_plot(data = avvsd_DD, name = ds_name, rownumbers = 100, postfix = "DD")
 heatmap_plot(data = avvsd_LL, name = ds_name, rownumbers = 100, postfix = "LL")
 
 ```
-
-```{r Heatmap filtered for topic}
+**Heatmap filtered for topic**
+```{r }
 ################ This is  specific to the T. reesei Annotation file######
 # if you want to look at a specific topic: 
 #example topics: Secondary metabolism, CAZymes, Transcription factors, Transporters..the spelling has to be exactly like in the annotation working file
