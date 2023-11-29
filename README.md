@@ -57,17 +57,31 @@ install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorB
 6. **Review Outputs**:
    - After running the script, check the outputs, which may include processed data files, figures, and logs. Review them to ensure the analysis ran as expected.
 
-
 ## Example Outputs
 I have included some example output files to demonstrate what you can expect from running the RNASeq_analysis script. These examples are based on the *Trichoderma reesei* data and are a good reference for understanding the kind of results the script will produce.
+
+**Count normalization** 
+In order to be able to compare counts and visualize them, they need to be normalized first. DESeq2 has its own normalization algorithms, variance stabilizing transformations (VST)  and regularized logarithm (rlog). In this example I use VST normalization. 
+Additionally there are other noramlization methods such as counts per million (CPM) and fragments per kilobase (FPKM) that additionally normalizes for fragment lengths. 
 
  **PCA plot**
 A principal component analysis (PCA) plot shows the variation between samples based on their gene expression. Similar samples will cluster together in the plot. The plot has a standard X-Y axis layout, with the axes representing the two principal components that capture the most variation in the data.
    ![PCA Plot Example](output/plots/PCA/example_data_PCA__231115.png)
-   Here we see that the main  variation of the dataset derives from the different ligth conditions (DD, LL) used (87% variation on x-axis (PC1)). 
+   Here we see that the main variation of the dataset derives from the different ligth conditions (DD, LL) used (87% variation on x-axis (PC1)). Therefore I split the dataset for the differential gene expression analysis (contrasts) in LL and DD so that the condition does not interfere too much with the effect of mutant vs WT. Here an example PCA for a separated dataset (LL only) and we see that now actually the mutant vs WT are the main variation of the dataset ![PCA Plot Example](output/plots/PCA/example_data_PCA_LL_231115.png)
 
+   The separation of dataset based on the condition is covered in the section "Subset by condition". 
 
+**Heatmaps**
+Heatmaps are created using pheatmap and can be used to visualize clustering of samples and genes 
+ ![Heatmap Plot Example](output/plots/heatmaps/example_data_heatmap_100_test_231115.png)
+Additionally we can focus on certain gene sets as defined in the Anntoation file (T. reesei specific) e.g. only CAZymes or transcription factors. 
+![Heatmap Plot Example](output/plots/heatmaps/example_data_heatmap_80__Transcription factors_231115.png)
 
+**Differentially expressed genes** 
+DEGs are created using the contrast function which results in two types of file, one in the directory conrasts/all which contains the values for all genes and in the directory contrasts/significant the files are already filtered for p-value and fold change. These values can be changed in the function, normally I used padj < 0.05 and log2 fold change of > |1| (corresonds to a fold change > 2) 
+
+**Annotation**
+Gene annotation is performed using the annotation file, this is specific to T. reesei but any other file in the same format can be used. 
 
 
 
