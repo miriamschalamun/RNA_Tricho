@@ -27,7 +27,7 @@ install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorB
 
 ## Quick start 
 
-1. **Obtain the Script**:
+ **Obtain the Script**:
    - Clone this repository to your local machine using the command:
      ```
      git clone https://github.com/yourusername/yourrepository.git
@@ -35,20 +35,17 @@ install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorB
      Or
    - Download the script file directly from the GitHub repository.
 
-2. **Prepare the Environment**:
-   - Launch RStudio
-   - Install any required R packages that are not already installed.
-
-3. **Run the Script**:
+ **Run the Script**:
    - Open the `RNASeq_analysis.Rmd` file in RStudio.
    - Run the script interactively by executing code chunks one by one, following the explanations provided within the script. This can be done by clicking the "Run" button within each chunk in RStudio.
 
-4. **Prepare Input Files**:
+ **Prepare Input Files**:
    - Sample input files specific to *Trichoderma reesei* are provided with this repository. They serve as templates for the format and structure data files should have.
 
 ## Usage
 **Getting started** 
-Load the libraries used
+
+Load the libraries 
 ```{r libraries}
 library("DESeq2")
 library(stringr)
@@ -70,12 +67,13 @@ library(dendextend)
 library(topGO)
 library(rrvgo)
 ```
- Set up working directory and date, which is added to the output files
+ Set up working directory 
 ```{r set up working directory and date}
 # Set the path to the directory where you want to perform the analysis and have all other required files stored (e.g. count files). Make sure to save the script in the same directory
 
 setwd("/path/to/script")
 
+Set the date, which is added to the output files
 today <- Sys.Date()
 today <- format(today, format = "%y%m%d", trim_ws = T)
 
@@ -108,6 +106,59 @@ directory("annotation")
 directory("normalized")
 
 ```
+
+**Input files** 
+```{r count and meta file and compute DEseq2 object}
+# Here change the file names to your files and the ds_name to the dataset you are working with 
+
+ds_name <- "example_data"
+
+# Read count table from featurecounts 
+cts <- read.table("featurecounts_example.txt", header=TRUE, row.names = 1, check.names = F)
+
+# Rename every but the first (length) column by extracting only the NGS IDS (in the example featurecounts.txt file you can see how it looks origially and change to your needs, if you like your input names from featurecounts you don't need to select)
+
+colnames(cts)[-1] <- str_extract(colnames(cts)[-1], '[0-9]+')
+
+# Add meta file 
+meta <- read_excel("meta_example.xlsx", col_names = TRUE)
+
+##############################################################################
+
+# From here on everything stays the same in this section 
+
+meta$strain <- factor(meta$strain)
+meta$lightregime <-factor(meta$lightregime)
+sample_names <- meta$replicate
+meta$replicate <- factor(meta$replicate)
+rownames(meta) <- meta$replicate
+
+# check if row names of meta table fit to colnames of countable MUST BE "TRUE" if not there is a mistake eg sample missing and order must correspond! 
+
+all(meta$NGS_ID %in% colnames(cts)[-1])
+all(colnames(cts)[-1] == meta$NGS_ID)
+
+# ONLY PERFORM sample renaming (from NGSS_ID to sample name) if the above is TRUE - if not than samples are switched!! 
+
+if (all(colnames(cts)[-1] == meta$NGS_ID)){
+  colnames(cts)[-1] <- c(sample_names) 
+} else {
+  print("sample names don't correspond to NGS IDs")
+}
+
+write.csv2(cts, paste0("renamed_counts_", ds_name, "_", today, ".csv"))    
+
+# Here the "dds" is computed, which allows for contrasts and comparison of samples for more detail refer to the DESeq2 Vignette
+
+dds <- DESeq2::DESeqDataSetFromMatrix(countData = cts[-1],
+                                      colData = meta,
+                                      design = ~ strain)
+mcols(dds)$basepairs <- cts$Length
+
+dds <- DESeq(dds, minReplicatesForReplace=Inf)
+dds2 <- dds
+
+````
 
 I have included some example output files to demonstrate what you can expect from running the RNASeq_analysis script. These examples are based on the *Trichoderma reesei* data and are a good reference for understanding the kind of results the script will produce.
 
