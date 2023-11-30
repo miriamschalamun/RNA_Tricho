@@ -5,7 +5,6 @@ Miriam Schalamun
 ## Table of Contents
 - [Introduction](#introduction)
 - [Requirements and Installation](#requirements-and-installation)
-- [Quick Start](#quick-start)
 - [Set-up](#set-up)
 - [Input files](#input-files)
 - [Compute DESeq object](#compute-DESeq-object)
@@ -25,7 +24,7 @@ Miriam Schalamun
 ## Introduction
 This repository offers an R script for gene expression analysis, tailored for the organism *Trichoderma reesei* and based on the Bioconductor DESeq2 package. For details of the DESeq2 package please refere to the [DESeq2 Vignette] : https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html.
 
-The **DEG-Treesei** script was created to analyze the findings in Schalamun et al. 2023 "The transcription factor STE12 in *T. reesei* is invovled in carbon and secondary metabolism". DOI to come when published
+The **RNASeq_analysis** script was created to analyze the findings in Schalamun et al. 2023 "The transcription factor STE12 in *T. reesei* is invovled in carbon and secondary metabolism". DOI to come when published
 
 The input data is a raw count matrix from *featureCounts* but other raw count matrixes from can be used as well. 
 The  scripts include functions for differential gene expression analysis, normalization, principal component analysis (PCA), heatmaps generation, and gene ontology (GO) enrichment analysis. 
@@ -34,24 +33,6 @@ The  scripts include functions for differential gene expression analysis, normal
 
 The script was wrritten and executed on Windows 10 and R version 4.2.2. 
 
-## Quick start 
-
- **Obtain the Script**:
-   - Clone this repository to your local machine using the command:
-     ```
-     git clone https://github.com/miriamschalamun/RNA_Tricho.git
-     ```
-     Or
-   - Download the script file directly from the GitHub repository.
-
- **Run the Script**:
-   - Open the `RNASeq_analysis.Rmd` file in RStudio.
-   - Run the script interactively by executing code chunks one by one, following the explanations provided within the script. This can be done by clicking the "Run" button within each chunk in RStudio.
-
- **Prepare Input Files**:
-   - Sample input files specific to *Trichoderma reesei* are provided with this repository. They serve as templates for the format and structure data files should have.
-
- 
 ## Requirements and Installation
 
 Download and install R from [CRAN](https://cran.r-project.org/).
@@ -65,7 +46,7 @@ install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorB
 ```
 
 ## Set-up 
-
+ - Open the `RNASeq_analysis.Rmd` file in RStudio.
 Load the libraries 
 ```{r libraries}
 library("DESeq2")
@@ -88,6 +69,7 @@ library(dendextend)
 library(topGO)
 library(rrvgo)
 ```
+
 **Set up working directory, date and create required directories**
 
 Set the path to the directory where you want to perform the analysis and have all other required files stored (e.g. count files). Make sure to save the script in the same directory.
@@ -123,6 +105,7 @@ directory("normalized")
 ```
 
 ## Input files
+Sample input files specific to *Trichoderma reesei* are provided in this repository. They serve as templates for the format and structure data files should have.
 
 ```{r}
 # Here change the file names to your files and the ds_name to the dataset you are working with
