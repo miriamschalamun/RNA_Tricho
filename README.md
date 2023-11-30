@@ -62,7 +62,6 @@ BiocManager::install(c("DESeq2", "apeglm", "genefilter"))
 install.packages(c("readxl", "ggplot2", "dplyr", "ggrepel", "pheatmap", "RColorBrewer", "gplots", "tidyverse", "edgeR", "matrixStats", "xlsx", "dendextend", "topGO", "rrvgo"))
 ```
 
-
 ## Set-up 
 
 Load the libraries 
@@ -88,6 +87,7 @@ library(topGO)
 library(rrvgo)
 ```
 **Set up working directory, date and create required directories**
+
 Set the path to the directory where you want to perform the analysis and have all other required files stored (e.g. count files). Make sure to save the script in the same directory.
 
 ```{r}
@@ -141,7 +141,9 @@ annotation <- read_excel("path/to/Annotation_file.xlsx").
 ```
 
 ## Compute DESeq object
-The DESeq object (dds) is the DESeq2 object needed for normalization and contrasts
+
+The DESeq object (dds) is the DESeq2 object needed for normalization and contrasts.
+
 ```R
 meta$strain <- factor(meta$strain)
 meta$lightregime <-factor(meta$lightregime)
@@ -224,8 +226,8 @@ avvsd <- results$avvsd
 ```
 
 ## FPKM count normalization
-Fragments Per Kilobase of transcript per Million mapped reads (FPKM) 
-These can also be used for visualizations like PCA and heatmaps
+
+Fragments Per Kilobase of transcript per Million mapped reads (FPKM) and can also be used for visualizations like PCA and heatmaps.
 
 ```{r}
 fpkm <- fpkm(dds, robust = T)
@@ -256,10 +258,11 @@ PCA_plot <- function(data, name, postfix){
 
 # This executes the PCA plot function
 PCA_plot(data = vsd, name = ds_name, postfix = "")
+```
 
    ![PCA Plot Example](output/plots/PCA/example_data_PCA__231115.png)
 Here we see that the main variation of the dataset derives from the different ligth conditions (DD, LL) used (87% variation on x-axis (PC1)). Therefore I have to split the dataset (DESeq object) for the differential gene expression analysis (contrasts) in LL and DD so that the condition does not interfere too much with the effect of mutant vs WT. 
-```
+
 
 ## Subset by condition
 
@@ -320,9 +323,11 @@ avvsd_LL <- results_LL$avvsd
 PCA_plot(data = vsd_DD, name = ds_name, postfix = "DD")
 PCA_plot(data = vsd_LL, name = ds_name, postfix = "LL")
 
+```
+
 PCA for a separated dataset (LL only) and we see that now actually the mutant vs WT are the main variation of the dataset
 ![PCA Plot Example LL](output/plots/PCA/example_data_PCA_LL_231115.png)
-```
+
 
 ## Heatmap plot
 
@@ -422,8 +427,7 @@ heatmap_plot_TOPIC(data = avvsd_DD, name = ds_name, rownumbers, postfix = "DD", 
 heatmap_plot_TOPIC(data = avvsd_LL, name = ds_name, rownumbers, postfix = "LL", whichTOPIC)
 
 ```
-
-![Heatmap Plot Example Topic](output/plots/heatmaps/example_data_heatmap_80__Transcription factors_231115.png)
+![Heatmap Plot Example TF](output/plots/heatmaps/example_data_heatmap_80__Transcription factors_231115.png)
 
 ## Differentially expressed genes
 DEGs are created using the contrast function which results in two types of file, one in the directory conrasts/all which contains the values for all genes and in the directory contrasts/significant the files are already filtered for p-value and fold change. These values can be changed in the function, normally I used padj < 0.05 and log2 fold change of > |1| (corresonds to a fold change > 2) 
