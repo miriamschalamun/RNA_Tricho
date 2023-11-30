@@ -177,47 +177,10 @@ dds <- DESeq2::DESeqDataSetFromMatrix(countData = cts[-1],
 mcols(dds)$basepairs <- cts$Length
 
 dds <- DESeq(dds, minReplicatesForReplace=Inf)
-dds2 <- dds
 
 ````
 
-## Subset by condition
 
-The data set I mostly used consists of different mutants under two conditions. Most of the time the condition (light) is the strongest factor of variance therefore I need to split my data set when computing the dds element for the contrasts later on. A good indicator for that is the PCA plot, it is recommended that if PCA1 (X-axis) has a higher value than 60% and this arises from a condition and not the strains you want to analyse then it is advisable to split the data set like done here. 
-
-```R
-generate_DESeq_object <- function (condition) {
-  # Use grep to find columns that contain the condition (e.g., "DD" or "LL")
-  matching_columns <- grep(condition, colnames(cts), value = TRUE)
-  data_subset <- cts[, matching_columns]
-  
-  subset_meta <- meta %>% 
-    filter(lightregime == condition)
-  subset_meta$strain <- factor(subset_meta$strain)
-  
-  # 'Strain' is used to subset 'meta' by matching strains
-  
-  my_colData <- subset_meta
-  
-  # Print the colData to check it
-  print(my_colData)
-  
-  # Create the DESeqDataSet
-  dds <- DESeqDataSetFromMatrix(countData = data_subset,
-                                colData = subset_meta,
-                                design = ~ strain)
-  
-  # Run DESeq analysis
-  dds <- DESeq(dds, minReplicatesForReplace=Inf)
-  
-  return(dds)
-}
-# Generates the dds object only for condition specific samples in order to avoid influences from condition (DD or LL)
-
-dds_DD <- generate_DESeq_object("DD")
-dds_LL <- generate_DESeq_object("LL")
-
-````
 
 ## VST count normalization
 
@@ -271,8 +234,8 @@ vsd_LL <- results_LL$vsd
 avvsd <- results$avvsd
 avvsd_DD <- results_DD$avvsd
 avvsd_LL <- results_LL$avvsd
-
 ```
+
 ## FPKM count normalization
 Fragments Per Kilobase of transcript per Million mapped reads (FPKM) 
 These can also be used for visualizations like PCA and heatmaps
@@ -309,10 +272,71 @@ PCA_plot(data = vsd, name = ds_name, postfix = "")
 PCA_plot(data = vsd_DD, name = ds_name, postfix = "DD")
 PCA_plot(data = vsd_LL, name = ds_name, postfix = "LL")
 
-```
    ![PCA Plot Example](output/plots/PCA/example_data_PCA__231115.png)
-Here we see that the main variation of the dataset derives from the different ligth conditions (DD, LL) used (87% variation on x-axis (PC1)). Therefore I split the dataset (DESeq object) for the differential gene expression analysis (contrasts) in LL and DD so that the condition does not interfere too much with the effect of mutant vs WT. Here an example PCA for a separated dataset (LL only) and we see that now actually the mutant vs WT are the main variation of the dataset ![PCA Plot Example](output/plots/PCA/example_data_PCA_LL_231115.png)
-The separation of dataset based on the condition is covered in the section above "Subset by condition". 
+Here we see that the main variation of the dataset derives from the different ligth conditions (DD, LL) used (87% variation on x-axis (PC1)). Therefore I have to split the dataset (DESeq object) for the differential gene expression analysis (contrasts) in LL and DD so that the condition does not interfere too much with the effect of mutant vs WT. 
+```
+
+## Subset by condition
+
+The data set I mostly used consists of different mutants under two conditions. Most of the time the condition (light) is the strongest factor of variance therefore I need to split my data set when computing the dds element for the contrasts later on. A good indicator for that is the PCA plot, it is recommended that if PCA1 (X-axis) has a higher value than 60% and this is likely to arise from a condition and not the strains you want to analyse then it is advisable to split the data set like done here. 
+
+```R
+generate_DESeq_object <- function (condition) {
+  # Use grep to find columns that contain the condition (e.g., "DD" or "LL")
+  matching_columns <- grep(condition, colnames(cts), value = TRUE)
+  data_subset <- cts[, matching_columns]
+  
+  subset_meta <- meta %>% 
+    filter(lightregime == condition)
+  subset_meta$strain <- factor(subset_meta$strain)
+  
+  # 'Strain' is used to subset 'meta' by matching strains
+  
+  my_colData <- subset_meta
+  
+  # Print the colData to check it
+  print(my_colData)
+  
+  # Create the DESeqDataSet
+  dds <- DESeqDataSetFromMatrix(countData = data_subset,
+                                colData = subset_meta,
+                                design = ~ strain)
+  
+  # Run DESeq analysis
+  dds <- DESeq(dds, minReplicatesForReplace=Inf)
+  
+  return(dds)
+}
+# Generates the dds object only for condition specific samples in order to avoid influences from condition (DD or LL)
+
+dds_DD <- generate_DESeq_object("DD")
+dds_LL <- generate_DESeq_object("LL")
+
+````
+
+# PCA plot for separated conditions 
+In order to visually check if splitting the data set by condition worked we run the VST normalization and PCA plot for the split dataset
+```R
+# Process each condition and store the results in lists
+results_DD <- process_condition(dds_DD, "DD", ds_name, today)
+results_LL <- process_condition(dds_LL, "LL", ds_name, today)
+
+
+# Extracting the VST objects
+vsd_DD <- results_DD$vsd
+vsd_LL <- results_LL$vsd
+
+# Extracting the average VST-normalized counts data frames
+
+avvsd_DD <- results_DD$avvsd
+avvsd_LL <- results_LL$avvsd
+
+PCA_plot(data = vsd_DD, name = ds_name, postfix = "DD")
+PCA_plot(data = vsd_LL, name = ds_name, postfix = "LL")
+
+PCA for a separated dataset (LL only) and we see that now actually the mutant vs WT are the main variation of the dataset
+![PCA Plot Example](output/plots/PCA/example_data_PCA_LL_231115.png)
+```
 
 ## Heatmap plot
 Heatmaps are created using pheatmap and can be used to visualize clustering of samples and genes 
