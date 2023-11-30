@@ -24,14 +24,14 @@ Miriam Schalamun
 ## Introduction
 This repository offers an R script for gene expression analysis, tailored for the organism *Trichoderma reesei* and based on the Bioconductor DESeq2 package. For details of the DESeq2 package please refere to the [DESeq2 Vignette] : https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html.
 
-The **RNASeq_analysis** script was created to analyze the findings in Schalamun et al. 2023 "The transcription factor STE12 in *T. reesei* is invovled in carbon and secondary metabolism". DOI to come when published
+The **RNASeq_analysis** script was created to analyze the findings for Manuscript in preparation
 
-The input data is a raw count matrix from *featureCounts* but other raw count matrixes from can be used as well. 
+The input data is a raw count matrix from *featureCounts* but other raw count matrixes can be used as well. 
 The  scripts include functions for differential gene expression analysis, normalization, principal component analysis (PCA), heatmaps generation, and gene ontology (GO) enrichment analysis. 
 
 *Trichoderma reesei* gene annotation is based on PMCID: PMC4771370 and PMC4812632. 
 
-The script was wrritten and executed on Windows 10 and R version 4.2.2. 
+The script was written and executed on Windows 10 and R version 4.2.2. 
 
 ## Requirements and Installation
 
@@ -355,11 +355,10 @@ heatmap_plot(data = avvsd_LL, name = ds_name, rownumbers = 100, postfix = "LL")
 ```
  ![Heatmap Plot Example](output/plots/heatmaps/example_data_heatmap_100_test_231115.png)
 
-**Heatmap filtered for topic**
+**Heatmap according to pre-assigned topics**
 
-This is  specific to the T. reesei Annotation file and refers to the different assigned "topics".
-Example topics: Secondary metabolism, CAZymes, Transcription factors, Transporters..the spelling has to be exactly like in the annotation working file
-The rownumbers might be lower than for above because some topics only have a few genes in them (eg there are ~400 CAZymes in total of which only a few might show different expression levels, so it likely is more interesting to only look at a subset of the most regulated ones, eg. 50 )
+This is  specific to the T. reesei annotation file and refers to different assigned "topics".
+Example topics: secondary metabolism, CAZymes, transcription factors, transporters..the spelling has to be exactly like in the annotation file.
 
 ```{r }
 #First execute the function
@@ -416,7 +415,7 @@ heatmap_plot_TOPIC(data = avvsd_LL, name = ds_name, rownumbers, postfix = "LL", 
 
 
 ## Differentially expressed genes
-DEGs are created using the contrast function which results in two types of file, one in the directory conrasts/all which contains the values for all genes and in the directory contrasts/significant the files are already filtered for p-value and fold change. These values can be changed in the function, normally I used padj < 0.05 and log2 fold change of > |1| (corresonds to a fold change > 2) 
+DEGs are created using the contrast function which results in two types of files, one in the directory conrasts/all which contains the values for all genes and in the directory contrasts/significant the files are already filtered by p-value and fold change. These values can be changed in the function. Usually I used padj < 0.05 and log2 fold change of > |1| (corresponds to a fold change > 2) 
 
 ```{r Contrasts}
 # First execute the function
@@ -468,7 +467,7 @@ contrasts_function(dds, mutant, WT, "LL", "DD", 0.05, 1, today)
 ```
 
 ## Annotation
-Gene annotation is performed using the annotation file, this is specific to T. reesei but any other file in the same format can be used. 
+Gene annotation is performed using the T. reesei annotation file, but any other file in the same format can be used. 
 
 ```R
  annotation_function <- function(data, name){
@@ -514,7 +513,7 @@ for(i in contrast_files){
 ```
 
 ## GO enrichment set up
-Creates the directories and functions for GO enrichment and visualization, here you don't need to change anything. Just execute.
+Creates the directories and functions for GO enrichment and visualization. Here you don't need to change anything. Just execute.
 
 ```R
 directory <- function(name){
@@ -694,16 +693,15 @@ for(i in contrast_files){
 Gofunction(data = data, name = name, rrvgo=rrvgo, ontology = category)
 }
 
-
 ```
 
 ## GO visualization
 
 Visualize using rrvgo and the yeast database for terms.
-Run the tests to determine pvalues for each go term using different algorithms (classic fisher or weighted). 
-Classic: "each GO term is tested independently not taking the GO hierachy into account. 
-weight01:a mix between "weight" and "elim" - is more conservative than classic but has less false positives and might miss true positives but the significance of scores (Alexa et al 2006 - Improved scoring of functional groups..).  
-However in many publications classic fisher is used. The advantage of weighted is that to me it sounds its more reliable and in the later created trees for visualization you more likely get the parent terms which make it easier to find important terms than looking at >100 terms. 
+Run the tests to determine p-values for each go term using different algorithms ("classic fisher" or "weighted"). 
+Classic: each GO term is tested independently not taking the GO hierachy into account. 
+weight01:a mix between "weighted" and "elim" (Alexa et al 2006 - Improved scoring of functional groups..).  
+I am using weight01 for most of my figures 
 
 ```R
 # yeast db: 
