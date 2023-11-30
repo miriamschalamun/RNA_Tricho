@@ -1,6 +1,6 @@
 # Differential gene expression analysis optimized for _Trichoderma reesei_ RNA sequencing data 
 Miriam Schalamun
-1. December 2023
+30. November 2023
 
 ## Table of Contents
 - [Introduction](#introduction)
