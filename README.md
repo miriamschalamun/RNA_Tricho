@@ -87,23 +87,17 @@ library(dendextend)
 library(topGO)
 library(rrvgo)
 ```
- Set up working directory 
-```{r}
-# Set the path to the directory where you want to perform the analysis and have all other required files stored (e.g. count files). Make sure to save the script in the same directory
+**Set up working directory, date and create required directories**
+Set the path to the directory where you want to perform the analysis and have all other required files stored (e.g. count files). Make sure to save the script in the same directory.
 
+```{r}
 setwd("/path/to/script")
 
-Set the date, which is added to the output files
+# Set the date, which is added to the output files
 today <- Sys.Date()
 today <- format(today, format = "%y%m%d", trim_ws = T)
 
-#load annotation file - Modified from "The Genomes of Three Uneven Siblings: Footprints of the Lifestyles of Three Trichoderma Species"  Schmoll et al. 2016 
-annotation <- read_excel("path/to/Annotation_file.xlsx")
-
-```
-Creates directories for output files
-```{r }
-# Creates the directories that are needed later on - execute
+# Creates the directories that are needed
 
 directory <- function(name){
   if (file.exists(name)) {
@@ -124,30 +118,31 @@ directory("plots/MA")
 directory("plots/heatmaps")
 directory("annotation")
 directory("normalized")
-
 ```
 
 ## Input files
 
-```{r count and meta file and compute DEseq2 object}
-# Here change the file names to your files and the ds_name to the dataset you are working with 
-
+```{r}
+# Here change the file names to your files and the ds_name to the dataset you are working with
 ds_name <- "example_data"
 
 # Read count table from featurecounts 
 cts <- read.table("featurecounts_example.txt", header=TRUE, row.names = 1, check.names = F)
 
-# Rename every but the first (length) column by extracting only the NGS IDS (in the example featurecounts.txt file you can see how it looks origially and change to your needs, if you like your input names from featurecounts you don't need to select)
+# Rename every but the first (length) column by extracting only the NGS IDS (in the example featurecounts.txt file you can see how it looks origially and change to your needs, if you like your input names from featurecounts you don't need to select). The first column is excluded because it is the gene length column and we need it for the computatiotion of FPKM values later on.
 
 colnames(cts)[-1] <- str_extract(colnames(cts)[-1], '[0-9]+')
 
 # Add meta file 
 meta <- read_excel("meta_example.xlsx", col_names = TRUE)
+
+# Load annotation file - Modified from "The Genomes of Three Uneven Siblings: Footprints of the Lifestyles of Three Trichoderma Species"  Schmoll et al. 2016 
+annotation <- read_excel("path/to/Annotation_file.xlsx").
 ```
 
 ## Compute DESeq object
+The DESeq object (dds) is the DESeq2 object needed for normalization and contrasts
 ```R
-
 meta$strain <- factor(meta$strain)
 meta$lightregime <-factor(meta$lightregime)
 sample_names <- meta$replicate
@@ -159,7 +154,7 @@ rownames(meta) <- meta$replicate
 all(meta$NGS_ID %in% colnames(cts)[-1])
 all(colnames(cts)[-1] == meta$NGS_ID)
 
-# ONLY PERFORM sample renaming (from NGSS_ID to sample name) if the above is TRUE - if not than samples are switched!! 
+# ONLY PERFORM sample renaming (from NGSS_ID to sample name) if the above is TRUE - if not than samples are switched!
 
 if (all(colnames(cts)[-1] == meta$NGS_ID)){
   colnames(cts)[-1] <- c(sample_names) 
@@ -180,14 +175,11 @@ dds <- DESeq(dds, minReplicatesForReplace=Inf)
 
 ````
 
-
-
 ## VST count normalization
 
-```R
 In order to  compare counts and visualize them, they need to be normalized first. DESeq2 has its own normalization algorithms, variance stabilizing transformations (VST)  and regularized logarithm (rlog). In this example I use VST normalization. 
 
-```{r VST count normalization}
+```{r}
 # Function to perform VST (Variance Stabilizing Transformation) and calculate averages
 process_condition <- function(dds, condition_name, ds_name, today) {
   # Perform variance stabilizing transformation
@@ -221,19 +213,14 @@ process_condition <- function(dds, condition_name, ds_name, today) {
 }
 
 # Process each condition and store the results in lists
-results_DD <- process_condition(dds_DD, "DD", ds_name, today)
-results_LL <- process_condition(dds_LL, "LL", ds_name, today)
 results <- process_condition(dds, "", ds_name, today)
 
 # Extracting the VST objects
 vsd <- results$vsd
-vsd_DD <- results_DD$vsd
-vsd_LL <- results_LL$vsd
 
-# Extracting the average VST-normalized counts data frames
+# Extracting the average VST-normalized counts
 avvsd <- results$avvsd
-avvsd_DD <- results_DD$avvsd
-avvsd_LL <- results_LL$avvsd
+
 ```
 
 ## FPKM count normalization
@@ -249,10 +236,10 @@ write.csv2(fpkm, paste0("normalized/fpkm", "_",ds_name, "_", today, "_", ".csv")
 ```
 
  ## PCA plot
-A principal component analysis (PCA) plot shows the variation between samples based on their gene expression. Similar samples will cluster together in the plot. The plot has a standard X-Y axis layout, with the axes representing the two principal components that capture the most variation in the data.
+A principal component analysis (PCA) plot shows the variation between samples based on their gene expression. Similar samples will cluster together in the plot. The plot has a standard X-Y axis layout, with the axes representing the two principal components that capture the most variation in the data. This is also a useful visualisation to check for outliers. 
 
  ```{r}
-# execute the function that automatically creates PCA plots, here you can change e.g. the size of the plot. 
+# Execute the function that automatically creates PCA plots, here you can change e.g. the size of the plot. 
 # Look at the plots (in publication ready resolution) in the plots/PCA directory
 PCA_plot <- function(data, name, postfix){
   png(filename = paste0("plots/PCA/", name,"_PCA_", postfix, "_", today, ".png"), width = 1600, height = 900, res = 300)
@@ -267,10 +254,8 @@ PCA_plot <- function(data, name, postfix){
   dev.off()
 }
 
-# this executes the PCA plot function
+# This executes the PCA plot function
 PCA_plot(data = vsd, name = ds_name, postfix = "")
-PCA_plot(data = vsd_DD, name = ds_name, postfix = "DD")
-PCA_plot(data = vsd_LL, name = ds_name, postfix = "LL")
 
    ![PCA Plot Example](output/plots/PCA/example_data_PCA__231115.png)
 Here we see that the main variation of the dataset derives from the different ligth conditions (DD, LL) used (87% variation on x-axis (PC1)). Therefore I have to split the dataset (DESeq object) for the differential gene expression analysis (contrasts) in LL and DD so that the condition does not interfere too much with the effect of mutant vs WT. 
@@ -278,7 +263,7 @@ Here we see that the main variation of the dataset derives from the different li
 
 ## Subset by condition
 
-The data set I mostly used consists of different mutants under two conditions. Most of the time the condition (light) is the strongest factor of variance therefore I need to split my data set when computing the dds element for the contrasts later on. A good indicator for that is the PCA plot, it is recommended that if PCA1 (X-axis) has a higher value than 60% and this is likely to arise from a condition and not the strains you want to analyse then it is advisable to split the data set like done here. 
+The data set I mostly used consists of different mutants under two conditions. As seen above in the PCA, most of the time the condition (light) is the strongest factor of variance therefore I need to split my data set when computing the dds element for the contrasts later on. A good indicator for that is the PCA plot, it is recommended that if PCA1 (X-axis) has a higher value than 60% and this is likely to arise from a condition and not the strains you want to analyse then it is advisable to split the data set like done here. 
 
 ```R
 generate_DESeq_object <- function (condition) {
@@ -307,15 +292,17 @@ generate_DESeq_object <- function (condition) {
   
   return(dds)
 }
-# Generates the dds object only for condition specific samples in order to avoid influences from condition (DD or LL)
 
+# Generates the dds object only for condition specific samples in order to avoid influences from condition (DD or LL)
 dds_DD <- generate_DESeq_object("DD")
 dds_LL <- generate_DESeq_object("LL")
 
 ````
 
 # PCA plot for separated conditions 
-In order to visually check if splitting the data set by condition worked we run the VST normalization and PCA plot for the split dataset
+
+In order to visually check if splitting the data set by condition worked we run the VST normalization and PCA plot for the split dataset.
+
 ```R
 # Process each condition and store the results in lists
 results_DD <- process_condition(dds_DD, "DD", ds_name, today)
@@ -327,7 +314,6 @@ vsd_DD <- results_DD$vsd
 vsd_LL <- results_LL$vsd
 
 # Extracting the average VST-normalized counts data frames
-
 avvsd_DD <- results_DD$avvsd
 avvsd_LL <- results_LL$avvsd
 
@@ -335,12 +321,15 @@ PCA_plot(data = vsd_DD, name = ds_name, postfix = "DD")
 PCA_plot(data = vsd_LL, name = ds_name, postfix = "LL")
 
 PCA for a separated dataset (LL only) and we see that now actually the mutant vs WT are the main variation of the dataset
-![PCA Plot Example](output/plots/PCA/example_data_PCA_LL_231115.png)
+![PCA Plot Example LL](output/plots/PCA/example_data_PCA_LL_231115.png)
 ```
 
 ## Heatmap plot
-Heatmaps are created using pheatmap and can be used to visualize clustering of samples and genes 
-```{r Heatmap plot}
+
+Heatmaps are created using pheatmap and can be used to visualize clustering of samples and genes.
+
+```{r}
+#First execute the function
 heatmap_plot <- function(data, name, postfix, rownumbers){
   avvsd_topic <- tibble::rownames_to_column(data, "gene")
   anno_topic <- annotation[,c("Geneid", "MMBR gene name", "TOPIC", "MMBR group", "Anno Trichoderma topic")]
@@ -355,8 +344,8 @@ heatmap_plot <- function(data, name, postfix, rownumbers){
   col_anno <- data.frame(condition = ifelse(grepl("LL",colnames(topic)), "Light", "Dark"))
   row.names(col_anno) <- colnames(topic)
   
-  #standard heatmap without any focus on topic
-  
+  #standard heatmap 
+
   topVar <- head(order(-rowVars(data)), n=rownumbers)
   mat <- data[topVar, ]
   mat <- mat - rowMeans(mat)
@@ -365,23 +354,25 @@ heatmap_plot <- function(data, name, postfix, rownumbers){
   dev.off()
 }
 
-# enter the number of how many genes should be displayed, 100 is a good average
+# Enter the number of how many genes should be displayed
 rownumbers <- 100
 
-#the postfix adds whatever you want in the title description e.g. test)
-
+# Automatically saves the figures in the plots/heatmaps directory
 heatmap_plot(data = avvsd, name = ds_name, rownumbers = 100, postfix = "")
 heatmap_plot(data = avvsd_DD, name = ds_name, rownumbers = 100, postfix = "DD")
 heatmap_plot(data = avvsd_LL, name = ds_name, rownumbers = 100, postfix = "LL")
 
 ```
-**Heatmap filtered for topic**
-```{r }
-################ This is  specific to the T. reesei Annotation file######
-# if you want to look at a specific topic: 
-#example topics: Secondary metabolism, CAZymes, Transcription factors, Transporters..the spelling has to be exactly like in the annotation working file
-# the rownumbers might be lower than for above because some topics only have a few genes in them (eg there are ~400 CAZymes in total of which only a few might show different expression levels, so it likely is more interesting to only look at a subset of the most regulated ones, eg. 50 )
+ ![Heatmap Plot Example](output/plots/heatmaps/example_data_heatmap_100_test_231115.png)
 
+**Heatmap filtered for topic**
+
+This is  specific to the T. reesei Annotation file and refers to the different assigned "topics".
+Example topics: Secondary metabolism, CAZymes, Transcription factors, Transporters..the spelling has to be exactly like in the annotation working file
+The rownumbers might be lower than for above because some topics only have a few genes in them (eg there are ~400 CAZymes in total of which only a few might show different expression levels, so it likely is more interesting to only look at a subset of the most regulated ones, eg. 50 )
+
+```{r }
+#First execute the function
 heatmap_plot_TOPIC <- function(data, name, postfix, rownumbers, whichTOPIC){
   
 avvsd_topic <- tibble::rownames_to_column(data, "gene")
@@ -421,25 +412,24 @@ topic_heatmap <- as.data.frame(topic_filtered[, !(colnames(topic_filtered) %in% 
   dev.off()
 }
 
+# Filter by "TOPIC" and the type you want to filter for (eg Secondary metabolism or CAZymes, must be written exactly as in the annotation file), the rownumbers are the number of genes displayed. 
 rownumbers <- 300
 whichTOPIC <- "CAZymes"
 
+#Automatically saves the figures in the plots/heatmaps directory
 heatmap_plot_TOPIC(data = avvsd, name = ds_name, rownumbers, postfix = "", whichTOPIC)
 heatmap_plot_TOPIC(data = avvsd_DD, name = ds_name, rownumbers, postfix = "DD", whichTOPIC)
 heatmap_plot_TOPIC(data = avvsd_LL, name = ds_name, rownumbers, postfix = "LL", whichTOPIC)
 
-# filter by "TOPIC" and the type you want to filter for (eg Secondary metabolism or CAZymes, must be written exactly as in the annotation file) 
 ```
 
- ![Heatmap Plot Example](output/plots/heatmaps/example_data_heatmap_100_test_231115.png)
-Additionally we can focus on certain gene sets as defined in the Anntoation file (T. reesei specific) e.g. only CAZymes or transcription factors. 
-![Heatmap Plot Example](output/plots/heatmaps/example_data_heatmap_80__Transcription factors_231115.png)
+![Heatmap Plot Example Topic](output/plots/heatmaps/example_data_heatmap_80__Transcription factors_231115.png)
 
 ## Differentially expressed genes
 DEGs are created using the contrast function which results in two types of file, one in the directory conrasts/all which contains the values for all genes and in the directory contrasts/significant the files are already filtered for p-value and fold change. These values can be changed in the function, normally I used padj < 0.05 and log2 fold change of > |1| (corresonds to a fold change > 2) 
-```{r Contrasts}
-# In the contrasts directory "all" contrasts contain all genes, "sig" contrasts contain filtered for padj and log2fold change - you can change these values (e.g log2Fold Change 0.58 corresponds to a fold change of 1.5)
 
+```{r Contrasts}
+# First execute the function
 contrasts_function <- function(dds, mutant_base, WT_base, condition1, condition2, padj_cutoff, log2_cutoff, today){
   # Generate file names
   contrast_name <- paste0(mutant_base, "_", condition1, "__", WT_base, "_", condition2)
@@ -491,7 +481,6 @@ contrasts_function(dds, mutant, WT, "LL", "DD", 0.05, 1, today)
 Gene annotation is performed using the annotation file, this is specific to T. reesei but any other file in the same format can be used. 
 
 ```R
-# Specific to T. reesei Annotation file (already loaded at top of script). 
  
 annotation_function <- function(data, name){
   as.data.frame(annotation)
@@ -524,10 +513,9 @@ annotation_function <- function(data, name){
 ```
 
 ## GO enrichment set up
+Creates the directories and functions for GO enrichment and visualization, here you don't need to change anything. Just execute.
 
 ```R
-# creates the directories and functions for GO enrichment and visualization, here you don't need to change anything. Just execute.
-
 directory <- function(name){
   if (file.exists(name)) {
     cat("the folder already exists")
@@ -664,10 +652,12 @@ rrvgo::scatterPlot(simMatrix, reducedTerms, size = "score")
 dev.off()
 }
 ```
-## GO enrichment
-```R
-# Performs GO enrichment using topGO 
 
+## GO enrichment
+
+Performs GO enrichment using topGO 
+
+```R
 BPterms <- ls(GOBPTerm)
 MFterms <- ls(GOMFTerm)
 
@@ -709,8 +699,10 @@ Gofunction(data = data, name = name, rrvgo=rrvgo, ontology = category)
 ```
 
 ## GO visualization
+
+Visualize using rrvgo and the yeast database for terms
+
 ```R
-# Visualize using rrvgo and the yeast database for the names
 # yeast db: 
 library("org.Sc.sgd.db")
 
@@ -770,7 +762,3 @@ rrvgo_function_MF_weighted(data, name, pvalue, threshold)
 }
 
 ```
-
-
-
-
