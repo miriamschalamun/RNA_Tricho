@@ -39,7 +39,7 @@ The script was wrritten and executed on Windows 10 and R version 4.2.2.
  **Obtain the Script**:
    - Clone this repository to your local machine using the command:
      ```
-     git clone https://github.com/yourusername/yourrepository.git
+     git clone https://github.com/miriamschalamun/RNA_Tricho.git
      ```
      Or
    - Download the script file directly from the GitHub repository.
