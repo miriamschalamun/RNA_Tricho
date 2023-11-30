@@ -1,4 +1,4 @@
-# RNASeq_analysis
+# Trichoderma_RNASeq_analysis
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -515,6 +515,17 @@ Gene annotation is performed using the annotation file, this is specific to T. r
   
 }
 
+contrast_files <- dir(path = "contrasts/significant/", pattern = ".csv", full.names = T, recursive = F)
+for(i in contrast_files){
+  data <- read.csv2(i)
+  anno_name <- tools::file_path_sans_ext(base::basename(i))
+  name <- paste0("annotation/", anno_name, "_anno", ".xlsx")
+  
+  if (file.exists(name)) {
+      cat("the file already exists")
+  }else
+    annotation_function(data = data, name = name)
+}
 ```
 
 ## GO enrichment set up
