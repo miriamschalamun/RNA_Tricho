@@ -427,7 +427,8 @@ heatmap_plot_TOPIC(data = avvsd_DD, name = ds_name, rownumbers, postfix = "DD", 
 heatmap_plot_TOPIC(data = avvsd_LL, name = ds_name, rownumbers, postfix = "LL", whichTOPIC)
 
 ```
-![Heatmap Plot Example TF](output/plots/heatmaps/example_data_heatmap_80__Transcription factors_231115.png)
+![Heatmap Plot Example TF](output/plots/heatmaps/example_data_heatmap_80__Transcription_factors_231115.png)
+
 
 ## Differentially expressed genes
 DEGs are created using the contrast function which results in two types of file, one in the directory conrasts/all which contains the values for all genes and in the directory contrasts/significant the files are already filtered for p-value and fold change. These values can be changed in the function, normally I used padj < 0.05 and log2 fold change of > |1| (corresonds to a fold change > 2) 
