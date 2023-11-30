@@ -1,4 +1,6 @@
-# RNASeq-T.reesei
+# Differential gene expression analysis optimized for _Trichoderma reesei_ RNA sequencing data 
+Miriam Schalamun
+1. December 2023
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -23,7 +25,7 @@
 ## Introduction
 This repository offers an R script for gene expression analysis, tailored for the organism *Trichoderma reesei* and based on the Bioconductor DESeq2 package. For details of the DESeq2 package please refere to the [DESeq2 Vignette] : https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html.
 
-The **RNASeq-T.reesei** script was created to analyze the findings in Schalamun et al. 2023 "The transcription factor STE12 in *T. reesei* is invovled in carbon and secondary metabolism".
+The **DEG-Treesei** script was created to analyze the findings in Schalamun et al. 2023 "The transcription factor STE12 in *T. reesei* is invovled in carbon and secondary metabolism". DOI to come when published
 
 The input data is a raw count matrix from *featureCounts* but other raw count matrixes from can be used as well. 
 The  scripts include functions for differential gene expression analysis, normalization, principal component analysis (PCA), heatmaps generation, and gene ontology (GO) enrichment analysis. 
