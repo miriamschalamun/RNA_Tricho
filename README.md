@@ -486,8 +486,7 @@ contrasts_function(dds, mutant, WT, "LL", "DD", 0.05, 1, today)
 Gene annotation is performed using the annotation file, this is specific to T. reesei but any other file in the same format can be used. 
 
 ```R
- 
-annotation_function <- function(data, name){
+ annotation_function <- function(data, name){
   as.data.frame(annotation)
   as.data.frame(annotation)
   as.data.frame(data)
@@ -515,6 +514,7 @@ annotation_function <- function(data, name){
   write.xlsx(down_anno, file = paste0(name), sheetName = paste0("down"), row.names = F, append = T)
   
 }
+
 ```
 
 ## GO enrichment set up
@@ -660,7 +660,7 @@ dev.off()
 
 ## GO enrichment
 
-Performs GO enrichment using topGO 
+Performs GO enrichment using topGO. 
 
 ```R
 BPterms <- ls(GOBPTerm)
@@ -668,7 +668,6 @@ MFterms <- ls(GOMFTerm)
 
 # Load custom annotation file  
 geneID2GO <- readMappings(file = "directory/GOterms.txt")
-
 
 # I needed in a format that I have one gene ID and listed next to it the GO terms
 GO2geneID <- inverseList(geneID2GO) 
@@ -699,13 +698,16 @@ for(i in contrast_files){
 Gofunction(data = data, name = name, rrvgo=rrvgo, ontology = category)
 }
 
-# run the tests to determine pvalues for each go term using different algorithms. classic: "each GO term is tested independently not taking the GO hierachy into account. weight01:a mix between "weight" and "elim" - is more conservative than classic but has less false positives and might miss  true positives but the significance of scores (Alexa et al 2006 - Improved scoring of functional groups...).  However in many publications classic fisher is used. The advantage of weighted is that to me it sounds its more reliable and in the later created trees for visualization you more likely get the parent terms which make it easier to find important terms than looking at >100 terms 
 
 ```
 
 ## GO visualization
 
-Visualize using rrvgo and the yeast database for terms
+Visualize using rrvgo and the yeast database for terms.
+Run the tests to determine pvalues for each go term using different algorithms (classic fisher or weighted). 
+Classic: "each GO term is tested independently not taking the GO hierachy into account. 
+weight01:a mix between "weight" and "elim" - is more conservative than classic but has less false positives and might miss true positives but the significance of scores (Alexa et al 2006 - Improved scoring of functional groups..).  
+However in many publications classic fisher is used. The advantage of weighted is that to me it sounds its more reliable and in the later created trees for visualization you more likely get the parent terms which make it easier to find important terms than looking at >100 terms. 
 
 ```R
 # yeast db: 
@@ -752,7 +754,6 @@ for(i in rrvgo_files_BP){
 rrvgo_function_BP_weighted(data, name, pvalue, threshold)
 }
 
-
 # Molecular Function category (MF) 
 rrvgo_files_MF <- dir(path = "GO/rrvgo/", pattern = "MF.csv", full.names = T, recursive = F)
 
@@ -767,3 +768,4 @@ rrvgo_function_MF_weighted(data, name, pvalue, threshold)
 }
 
 ```
+ ![GO Plot Example](output/GO/plots/treemap/BP/weighted/rrvgo_mutant_LL__WT_LL_sig_231115BP_p0.1_0.7.png)
