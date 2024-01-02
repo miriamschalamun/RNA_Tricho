@@ -24,7 +24,7 @@ Miriam Schalamun
 ## Introduction
 This repository offers an R script for gene expression analysis, tailored for the organism *Trichoderma reesei* and based on the Bioconductor DESeq2 package. For details of the DESeq2 package please refere to the [DESeq2 Vignette] : https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html.
 
-The **RNASeq_analysis** script was created to analyze the findings for Manuscript in preparation
+The **RNASeq_analysis** script was created to analyze the findings for: "The transcription factor STE12 influences growth on several carbon sources and production of dehydroacetic acid (DHAA) in Trichoderma reesei".
 
 The input data is a raw count matrix from *featureCounts* but other raw count matrixes can be used as well. 
 The  scripts include functions for differential gene expression analysis, normalization, principal component analysis (PCA), heatmaps generation, and gene ontology (GO) enrichment analysis. 
